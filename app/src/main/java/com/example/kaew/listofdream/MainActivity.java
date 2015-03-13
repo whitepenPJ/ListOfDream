@@ -1,20 +1,25 @@
 package com.example.kaew.listofdream;
 
-import android.content.ClipData;
-import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.kaew.listofdream.Standard.*;
+import com.example.kaew.listofdream.Standard.Enum;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -24,12 +29,13 @@ public class MainActivity extends ActionBarActivity {
 
     DatabaseHandler db;
     List<DreamEntity> lstDreamEntity;
-
+    ListView lvDream;
+    int indexSelected;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        lvDream = (ListView)findViewById(R.id.lvDream);
         db = new DatabaseHandler(getApplicationContext());
         try {
             lstDreamEntity = db.selectAllDream();
@@ -41,15 +47,23 @@ public class MainActivity extends ActionBarActivity {
         }catch(SQLException e)
         {
             Log.d("Connection", "Error connection : Cannot select data");
-            Toast.makeText(getApplicationContext(),"Error connection : Cannot select data", Toast.LENGTH_SHORT);
+            Toast.makeText(getApplicationContext(),"Error connection : Cannot select data", Toast.LENGTH_SHORT).show();
         }
 
+        super.registerForContextMenu(lvDream);
+        lvDream.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                indexSelected = position;
+                Log.d("Test", "Postion : " + String.valueOf(position));
+                return false;
+            }
+        });
 
     }
     private void populate()
     {
         ArrayAdapter<DreamEntity> dreamEntityAdapter = new ListAdapter();
-        ListView lvDream = (ListView)findViewById(R.id.lvDream);
         lvDream.setAdapter(dreamEntityAdapter);
     }
     private void initialData()
@@ -69,6 +83,28 @@ public class MainActivity extends ActionBarActivity {
             Toast.makeText(getApplicationContext(),"Error connection : Cannot insert data", Toast.LENGTH_SHORT);
         }
     }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        MenuInflater inflater = super.getMenuInflater();
+        inflater.inflate(R.menu.menu_list_view, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        switch (item.getItemId())
+        {
+            case R.id.menu_edit :
+                DreamEntity entity = lstDreamEntity.get(indexSelected);
+                Toast.makeText(getApplicationContext(),entity.get_dream(), Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.menu_delete :
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -84,10 +120,18 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (id)
+        {
+            case R.id.action_add :
+                Intent intent = new Intent(this, InsertForm.class);
+                DreamEntity entity = new DreamEntity();
+                entity.set_formMode(Enum.FORM_MODE.ADD);
+                intent.putExtra("Parameter", entity);
+                startActivity(intent);
+                break;
+            case R.id.action_about:
+                break;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -111,9 +155,9 @@ public class MainActivity extends ActionBarActivity {
             DreamEntity entity = super.getItem(position);
             if(entity!=null)
             {
-                ((TextView)view.findViewById(R.id.tvDream)).setText(entity.getDream());
-                ((TextView)view.findViewById(R.id.tvComment)).setText(entity.getComment());
-                ((CheckBox)view.findViewById(R.id.cbAchieve)).setChecked(entity.getAchieve());
+                ((TextView)view.findViewById(R.id.tvDream)).setText(entity.get_dream());
+                ((TextView)view.findViewById(R.id.tvComment)).setText(entity.get_comment());
+                ((CheckBox)view.findViewById(R.id.cbAchieve)).setChecked(entity.is_achieve());
                 ((TextView)view.findViewById(R.id.tvNo)).setText(String.valueOf(position+1));
             }
 
