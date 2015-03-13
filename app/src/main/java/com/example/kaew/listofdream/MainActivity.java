@@ -43,7 +43,6 @@ public class MainActivity extends ActionBarActivity {
                 initialData();
                 lstDreamEntity = db.selectAllDream();
             }
-            populate();
         }catch(SQLException e)
         {
             Log.d("Connection", "Error connection : Cannot select data");
@@ -55,11 +54,11 @@ public class MainActivity extends ActionBarActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 indexSelected = position;
-                Log.d("Test", "Postion : " + String.valueOf(position));
+                Log.d("Test", "Pos : " + String.valueOf(position));
                 return false;
             }
         });
-
+        populate();
     }
     private void populate()
     {
@@ -80,7 +79,7 @@ public class MainActivity extends ActionBarActivity {
         }catch(SQLException e)
         {
             Log.d("Connection", "Error connection : Cannot insert data");
-            Toast.makeText(getApplicationContext(),"Error connection : Cannot insert data", Toast.LENGTH_SHORT);
+            Toast.makeText(getApplicationContext(),"Error connection : Cannot insert data", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -148,8 +147,7 @@ public class MainActivity extends ActionBarActivity {
             View view = convertView;
             if(view==null)
             {
-                LayoutInflater vi = LayoutInflater.from(super.getContext());
-                view = vi.inflate(R.layout.listview_tamplate, null);
+                view = getLayoutInflater().inflate(R.layout.listview_tamplate, parent, false);
             }
 
             DreamEntity entity = super.getItem(position);
@@ -157,8 +155,12 @@ public class MainActivity extends ActionBarActivity {
             {
                 ((TextView)view.findViewById(R.id.tvDream)).setText(entity.get_dream());
                 ((TextView)view.findViewById(R.id.tvComment)).setText(entity.get_comment());
-                ((CheckBox)view.findViewById(R.id.cbAchieve)).setChecked(entity.is_achieve());
+//                ((CheckBox)view.findViewById(R.id.cbAchieve)).setChecked(entity.is_achieve());
                 ((TextView)view.findViewById(R.id.tvNo)).setText(String.valueOf(position+1));
+
+//                ((TextView)view.findViewById(R.id.txtName)).setText(entity.get_dream());
+//                ((TextView)view.findViewById(R.id.txtEmail)).setText(entity.get_dream());
+//                ((TextView)view.findViewById(R.id.txtPhoneNumber)).setText(entity.get_dream());
             }
 
             return view;

@@ -2,6 +2,7 @@ package com.example.kaew.listofdream;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -61,7 +62,8 @@ public class InsertForm extends Activity {
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = getIntent();
+                startNextMatchingActivity(intent);
             }
         });
 

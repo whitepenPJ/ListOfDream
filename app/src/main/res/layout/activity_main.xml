@@ -12,7 +12,8 @@
         android:text="No."
         android:id="@+id/TextView1"
         android:layout_column="0"
-        android:padding="10dp" />
+        android:padding="10dp"
+        android:textColor="#ff000000" />
 
     <TextView
         android:layout_width="85dp"
@@ -24,7 +25,8 @@
         android:padding="10dp"
         android:layout_alignTop="@+id/TextView1"
         android:layout_toRightOf="@+id/TextView1"
-        android:layout_toEndOf="@+id/TextView1" />
+        android:layout_toEndOf="@+id/TextView1"
+        android:textColor="#ff000000" />
 
     <TextView
         android:layout_width="100dp"
@@ -35,7 +37,8 @@
         android:layout_column="2"
         android:padding="10dp"
         android:layout_alignTop="@+id/textView"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="#ff000000" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -47,7 +50,8 @@
         android:padding="10dp"
         android:layout_alignTop="@+id/textView2"
         android:layout_toRightOf="@+id/textView2"
-        android:layout_toEndOf="@+id/textView2" />
+        android:layout_toEndOf="@+id/textView2"
+        android:textColor="#ff000000" />
 
     <ListView
         android:layout_width="fill_parent"
